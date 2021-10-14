@@ -46,6 +46,12 @@ namespace API
             services.AddAutoMapper(typeof(MappingProfiles));
 
             services.AddApplicationServices();
+
+            services.AddCors(opt => {
+                opt.AddPolicy("CorsPolicy", policy => {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +64,6 @@ namespace API
             if (env.IsDevelopment())
             {
                 // app.UseDeveloperExceptionPage();
-
             }
 
             // If endpoints are not found, go to ErrorController route with coresponding status code
@@ -69,6 +74,8 @@ namespace API
             app.UseRouting();
 
             app.UseStaticFiles();
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
