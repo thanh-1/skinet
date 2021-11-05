@@ -20,6 +20,7 @@ using API.Middleware;
 using API.Errors;
 using API.Extensions;
 using StackExchange.Redis;
+using Infrastructure.Identity;
 
 namespace API
 {
@@ -43,6 +44,12 @@ namespace API
             services.AddControllers();
             
             services.AddDbContext<StoreContext>(x => x.UseSqlite(this.configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<AppIdentityDbContext>(opt => {
+                opt.UseSqlite(this.configuration.GetConnectionString("IdentityConnection"));
+            });
+
+            services.AddIdentityServices(this.configuration);
             
             services.AddAutoMapper(typeof(MappingProfiles));
 
@@ -82,6 +89,8 @@ namespace API
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
