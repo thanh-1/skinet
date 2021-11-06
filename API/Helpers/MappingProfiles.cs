@@ -21,6 +21,10 @@ namespace API.Helpers
             // No need to add more config, AutoMapper can map since properties name are the same
             // Also map the other way around
             CreateMap<Address, AddressDto>().ReverseMap();
+
+            CreateMap<BasketItemDto, BasketItem>();
+
+            CreateMap<CustomerBasketDto, CustomerBasket>();
         }
     }
 }
