@@ -1,3 +1,10 @@
+<!--
+  Stripe rules:
+  No Lazy load for Stripe javascript
+  Do NOT do anything clever with their javascript
+  Stripe javascript MUST be added in index.html
+  Stripe has anti fraud check inside it to examine our application
+-->
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,5 +16,6 @@
 </head>
 <body>
   <app-root></app-root>
+  <script src="https://js.stripe.com/v3/"></script>
 </body>
 </html>
