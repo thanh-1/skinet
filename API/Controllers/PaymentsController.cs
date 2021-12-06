@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Order = Core.Entities.OrderAggregate.Order;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace API.Controllers
 {
@@ -24,13 +25,14 @@ namespace API.Controllers
         // Only trust things that have this particular secret
         // we will get this webhook secret when we config our enpoint in Stripe
         // To test webhooks, we use Stripe CLI and when it is running, it will give us the secret
-        private const string WhSecret = "whsec_Z1wiREkto9vfLl0VDBUJJ8uVtTou9voV";
+        private readonly string WhSecret;
         private readonly ILogger logger;
 
-        public PaymentsController(IPaymentService payment, ILogger<PaymentsController> logger)
+        public PaymentsController(IPaymentService payment, ILogger<PaymentsController> logger, IConfiguration config)
         {
             this.logger = logger;
             this.payment = payment;
+            this.WhSecret = config.GetSection("StripeSettings:WhSecret").Value;
         }
 
         [Authorize]

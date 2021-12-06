@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Core.Interfaces;
 using AutoMapper;
 using API.Helpers;
@@ -43,10 +45,10 @@ namespace API
 
             services.AddControllers();
             
-            services.AddDbContext<StoreContext>(x => x.UseSqlite(this.configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<StoreContext>(x => x.UseNpgsql(this.configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<AppIdentityDbContext>(opt => {
-                opt.UseSqlite(this.configuration.GetConnectionString("IdentityConnection"));
+                opt.UseNpgsql(this.configuration.GetConnectionString("IdentityConnection"));
             });
 
             services.AddIdentityServices(this.configuration);
@@ -86,7 +88,17 @@ namespace API
 
             app.UseRouting();
 
+            // This one serve anything that inside wwwroot folder
             app.UseStaticFiles();
+
+            // tell API images are in the Content folder
+            app.UseStaticFiles(new StaticFileOptions 
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Content")
+                ),
+                RequestPath = "/content"
+            });
 
             app.UseCors("CorsPolicy");
 
@@ -97,6 +109,11 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                // We will serve Angular Content from the API
+                // We need to tell our API about the endpoints
+                // An Endpoint for Angular
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }

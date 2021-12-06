@@ -39,7 +39,7 @@ namespace API.Helpers
                 var contentResult = new ContentResult
                 {
                     Content = cachedResponse,
-                    ContentType = "application/json",
+                    ContentType = "application/json; charset=utf-8",
                     StatusCode = 200
                 };
                 context.Result = contentResult;
@@ -50,7 +50,7 @@ namespace API.Helpers
 
             if (executedContext.Result is OkObjectResult okObjectResult)
             {
-                await cacheService.CacheResponseAsync(cacheKey, okObjectResult, TimeSpan.FromSeconds(timeToLiveInSecond));
+                await cacheService.CacheResponseAsync(cacheKey, okObjectResult.Value, TimeSpan.FromSeconds(timeToLiveInSecond));
             }
         }
 

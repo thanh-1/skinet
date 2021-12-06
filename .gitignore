@@ -5,6 +5,8 @@
 
 appsettings.json
 *.db
+wwwroot
+publish
 
 # User-specific files
 *.rsuser

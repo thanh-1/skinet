@@ -48,7 +48,7 @@ export class ShopComponent implements OnInit {
 
   getBrands()
   {
-    this.shopService.getBrands().subscribe(response => {
+    this.shopService.getBrands().subscribe((response: IBrand[]) => {
       this.brands = [{id: 0, name: 'All'}, ...response];
     }, error => {
       console.log(error);
@@ -57,7 +57,7 @@ export class ShopComponent implements OnInit {
 
   getTypes()
   {
-    this.shopService.getTypes().subscribe(response => {
+    this.shopService.getTypes().subscribe((response: IType[]) => {
       this.types = [{id: 0, name: 'All'}, ...response];
     }, error => {
       console.log(error);
